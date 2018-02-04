@@ -1,21 +1,15 @@
 import {BlockChain} from "./blockchain";
 
 (async () => {
-    var x = new BlockChain();
+    var chain = new BlockChain();
     // satoshi = 0, bill = 0
 
-    x.add('satoshi', 'bill', 100);
-    // satoshi = -100, bill = 100
+    chain.add('satoshi', 'bill', 100)
+        .add('satoshi', 'bill', 150)
+        .add('bill', 'satoshi', 50)
+        .add('bill', 'satoshi', 1000)
+        .add('satoshi', 'bill', 800);
 
-    x.add('satoshi', 'bill', 150);
-    // satoshi = -250, bill = 250
-
-    x.add('bill', 'satoshi', 50);
-    // satoshi = 200, bill = -200
-
-    var b = x.getBalance('bill');
-    var s = x.getBalance('satoshi');
-
-    await x.save('block.txt');
+    await chain.save('block.txt');
 
 })();
