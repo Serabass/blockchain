@@ -14,7 +14,7 @@ export class BlockChain {
         var lines = source.split(BlockChain.separator);
 
         for (let line of lines) {
-            blockChain.addTransaction(Transaction.fromString(line));
+            blockChain.addTransaction(Transaction.fromString(line, blockChain));
         }
 
         return blockChain;
@@ -22,7 +22,7 @@ export class BlockChain {
 
     public addTransaction(transaction: Transaction): BlockChain {
         if (this.transactions.length >= 1) {
-            transaction.prevTransaction = this.lastTransaction();
+            transaction.prevTransaction = this.lastTransaction;
             transaction.hash = transaction.buildHash();
         } else {
             transaction.hash = transaction.buildHash();
@@ -45,12 +45,13 @@ export class BlockChain {
         return b1 + b2;
     }
 
-    private lastTransaction() {
+    public get lastTransaction() {
         return this.transactions[this.transactions.length - 1];
     }
 
     public add(from: string, to: string, amount: number, date: Date = new Date()): BlockChain {
         let transaction = new Transaction(amount, from, to, date);
+        transaction.prevTransaction = this.lastTransaction;
         this.addTransaction(transaction);
         return this;
     }
@@ -74,7 +75,6 @@ export class BlockChain {
     }
 
     public async save(path: string) {
-        debugger;
         var string = this.toString();
         return fs.writeFile(path, string);
     }
