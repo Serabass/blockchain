@@ -39,12 +39,8 @@ export class BlockChain {
             .filter(transaction => transaction.to === userName)
             .map(transaction => transaction.amount);
 
-        var b1 = v1.reduce((t1: number, t2: number, index: number, a: number[]) => {
-            return t1 + t2;
-        }, 0);
-        var b2 = v2.reduce((t1: number, t2: number, index: number, a: number[]) => {
-            return t1 + t2;
-        }, 0);
+        var b1 = v1.reduce((t1: number, t2: number) => t1 + t2, 0);
+        var b2 = v2.reduce((t1: number, t2: number) => t1 + t2, 0);
 
         return b1 + b2;
     }

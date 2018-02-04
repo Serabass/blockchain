@@ -15,10 +15,7 @@ import {BlockChain} from "./blockchain";
 
     var b = x.getBalance('bill');
     var s = x.getBalance('satoshi');
-    debugger;
 
     await x.save('block.txt');
 
-    var chain = await BlockChain.fromFile('block.txt');
-    console.log('Chain correctivity: ', chain.check());
 })();
