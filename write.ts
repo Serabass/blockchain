@@ -2,7 +2,6 @@ import {BlockChain} from "./blockchain";
 
 (async () => {
     var chain = new BlockChain();
-    // satoshi = 0, bill = 0
 
     chain.add('satoshi', 'bill', 100)
         .add('satoshi', 'bill', 150)
@@ -22,6 +21,9 @@ import {BlockChain} from "./blockchain";
         .add('satoshi', 'bill', 90)
         .add('satoshi', 'bill', 9)
         .add('satoshi', 'bill', 1)
+        .add('bob', 'alice', 12)
+        .add('bob', 'satoshi', 12)
+        .add('bob', 'bill', 12)
     ;
 
     await chain.save('block.txt');

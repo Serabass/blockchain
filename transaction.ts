@@ -8,7 +8,7 @@ export class Transaction {
 
     public static fromString(string: string): Transaction {
         var [hash, amount, from, to, date] = string.split(Transaction.separator);
-        var transaction = new Transaction(parseFloat(amount), from, to, new Date(date));
+        var transaction = new Transaction(parseFloat(amount), from, to, new Date(+date));
         transaction.hash = hash;
         if (!transaction.check()) {
             throw new Error('Transaction is incorrect');
@@ -33,12 +33,17 @@ export class Transaction {
             this.amount.toString(),
             this.from,
             this.to,
-            this.date.toISOString()
+            this.date.valueOf()
         ].join(Transaction.separator)
+    }
+
+    private get prevHash() {
+        return this.isFirst ? Transaction.defaultHash : this.prevTransaction.hash;
     }
 
     public buildHash() {
         return Hash.build([
+            this.prevHash,
             this.amount.toString(),
             this.from,
             this.to,

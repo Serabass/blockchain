@@ -34,10 +34,10 @@ export class BlockChain {
     public getBalance(userName: string) {
         var v1 = this.transactions
             .filter(transaction => transaction.from === userName)
-            .map(transaction => -transaction.amount);
+            .map(transaction => transaction.amount);
         var v2 = this.transactions
             .filter(transaction => transaction.to === userName)
-            .map(transaction => transaction.amount);
+            .map(transaction => -transaction.amount);
 
         var b1 = v1.reduce((t1: number, t2: number) => t1 + t2, 0);
         var b2 = v2.reduce((t1: number, t2: number) => t1 + t2, 0);
