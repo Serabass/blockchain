@@ -8,7 +8,21 @@ import {BlockChain} from "./blockchain";
         .add('satoshi', 'bill', 150)
         .add('bill', 'satoshi', 50)
         .add('bill', 'satoshi', 1000)
-        .add('satoshi', 'bill', 800);
+        .add('satoshi', 'bill', 800)
+        .add('satoshi', 'bill', 1245)
+        .add('bill', 'satoshi', 200)
+        .add('bill', 'satoshi', 45)
+        .add('bill', 'satoshi', 1000)
+        .add('bill', 'satoshi', 100)
+        .add('alice', 'satoshi', 500.5)
+        .add('satoshi', 'alice', 400)
+        .add('satoshi', 'alice', 50)
+        .add('satoshi', 'alice', 49)
+        .add('satoshi', 'alice', 1.5)
+        .add('satoshi', 'bill', 90)
+        .add('satoshi', 'bill', 9)
+        .add('satoshi', 'bill', 1)
+    ;
 
     await chain.save('block.txt');
 

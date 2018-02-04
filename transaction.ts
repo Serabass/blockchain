@@ -1,5 +1,4 @@
 import {Hash} from "./hash";
-import has = Reflect.has;
 
 export class Transaction {
     public prevTransaction: Transaction;
