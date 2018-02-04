@@ -1,0 +1,17 @@
+{
+  "name": "bc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blockchain-json-api": "0.0.7",
+    "fs-promise": "^2.0.3",
+    "js-sha256": "^0.9.0",
+    "mz": "^2.7.0"
+  }
+}

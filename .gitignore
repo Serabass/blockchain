@@ -1,0 +1,6 @@
+**/*.js
+**/*.js.map
+block.txt
+
+node_modules
+.idea
