@@ -1,12 +1,33 @@
 import {Transaction} from "./transaction";
-import * as fs from "mz/fs";
+import * as fs from "fs";
+import * as mfs from "mz/fs";
+import * as stream from "stream";
+import * as byline from "byline";
 
 export class BlockChain {
     public transactions: Transaction[] = [];
     public static separator = '\n';
 
     public static async fromFile(path: string): Promise<BlockChain> {
-        return BlockChain.from((await fs.readFile(path)).toString('utf-8'));
+        return BlockChain.fromStream(fs.createReadStream(path));
+    }
+
+    public static fromStream(stream: stream.Readable): Promise<BlockChain> {
+        return new Promise<BlockChain>((resolve, reject) => {
+            var blockChain = new BlockChain();
+            var byLineStream = byline(stream);
+            byLineStream
+                .on('data', (line: Buffer) => {
+                    var source = line.toString('utf-8');
+                    blockChain.addTransaction(Transaction.fromString(source, blockChain));
+                })
+                .on('error', (error) => {
+                    reject(error);
+                })
+                .on('end', () => {
+                    resolve(blockChain);
+                });
+        });
     }
 
     public static from(source: string): BlockChain {
@@ -76,6 +97,6 @@ export class BlockChain {
 
     public async save(path: string) {
         var string = this.toString();
-        return fs.writeFile(path, string);
+        return mfs.writeFile(path, string);
     }
 }

@@ -24,6 +24,7 @@ import {BlockChain} from "./blockchain";
         .add('bob', 'alice', 12)
         .add('bob', 'satoshi', 12)
         .add('bob', 'bill', 12)
+        .add('bob', 'bill', 12)
     ;
 
     await chain.save('block.txt');
