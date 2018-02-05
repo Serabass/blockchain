@@ -3,8 +3,9 @@ import {BlockChain} from "./blockchain";
 
 export class Transaction {
     public prevTransaction: Transaction;
+    public nextTransaction: Transaction;
     public hash: string;
-    public static separator: string = '|';
+    public static separator: string = '[]';
     public static defaultHash: string = Hash.build('');
 
     public static fromString(string: string, blockChain: BlockChain): Transaction {
@@ -13,6 +14,9 @@ export class Transaction {
         var transaction = new Transaction(parseFloat(amount), from, to, new Date(+date));
         transaction.hash = hash;
         transaction.prevTransaction = lastTransaction;
+        if (lastTransaction) {
+            lastTransaction.nextTransaction = transaction;
+        }
         if (!transaction.check()) {
             throw new Error('Transaction is incorrect');
         }
@@ -46,7 +50,7 @@ export class Transaction {
 
     public buildHash() {
         // return (this.isFirst ? 0 : this.prevTransaction.amount) + '::' + this.amount;
-        let prevHash = this.prevHash;
+        let prevHash: string = this.prevHash;
         let strings = [
             prevHash,
             this.amount.toString(),
