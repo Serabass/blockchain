@@ -69,9 +69,9 @@ export abstract class Transaction<T> {
         let strings = [
             prevHash,
             this.data,
-            this.date.valueOf().toString(),
+            this.serializeDate(),
         ];
-        return Hash.build(strings.join(this.separator));
+        return Hash.build(strings.join(""));
     }
 
     public check(): boolean {
