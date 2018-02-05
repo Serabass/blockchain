@@ -1,20 +1,16 @@
 import {BlockChain} from "./blockchain";
 
 (async () => {
-    var chain = new BlockChain();
+    let chain = new BlockChain();
+    let coin = () => Math.random() > 0.5;
 
-    function coin():boolean {
-        return Math.random() > 0.5;
-    }
-
-    for (var i = 0; i < 10000; i++) {
+    for (let i = 0; i < 10000; i++) {
         if (coin()) {
-            chain.add((100 * Math.random()).toString());
+            chain.add("a");
         } else {
-            chain.add((100 * Math.random()).toString());
+            chain.add("b");
         }
     }
 
-    await chain.save('block.txt');
-
+    await chain.save("block.txt");
 })();
