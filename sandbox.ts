@@ -1,8 +1,9 @@
-import * as fs from "fs";
 import {BlockChain} from "./blockchain";
 
 (async () => {
-    var stream = fs.createReadStream('block.txt');
-    var result = await BlockChain.fromStream(stream);
-    console.log(result);
+    var chain = await BlockChain.fromFile('block.txt');
+    var trans = chain.enumTransactions();
+    for (var current of trans) {
+        console.log(current.data);
+    }
 })();

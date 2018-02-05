@@ -1,33 +1,46 @@
 import {Hash} from "./hash";
 import {BlockChain} from "./blockchain";
 
-export class Transaction {
-    public prevTransaction: Transaction;
-    public nextTransaction: Transaction;
+export type SerializedTransaction<T> = {
+    hash: string,
+    data: T,
+    date: Date
+}
+
+export abstract class Transaction<T> {
+    public prevTransaction: Transaction<T>;
+    public nextTransaction: Transaction<T>;
     public hash: string;
-    public static separator: string = '[]';
+    public data: T;
+    public date: Date;
     public static defaultHash: string = Hash.build('');
 
-    public static fromString(string: string, blockChain: BlockChain): Transaction {
-        var [hash, amount, from, to, date] = string.split(Transaction.separator);
-        var lastTransaction = blockChain.lastTransaction;
-        var transaction = new Transaction(parseFloat(amount), from, to, new Date(+date));
-        transaction.hash = hash;
-        transaction.prevTransaction = lastTransaction;
-        if (lastTransaction) {
-            lastTransaction.nextTransaction = transaction;
-        }
-        if (!transaction.check()) {
-            throw new Error('Transaction is incorrect');
-        }
-        return transaction;
+    public get separator() {
+        return '|';
+    };
+
+    public abstract serialize(data: T): string;
+
+    public abstract deserialize(input: string): T;
+
+    constructor(public blockChain: BlockChain) {
+
     }
 
-    constructor(public amount: number,
-                public from: string,
-                public to: string,
-                public date: Date) {
+    public parseBlock(block: string) {
+        var [hash, data, date] = block.split(this.separator);
+        this.hash = hash;
+        this.data = this.deserialize(data);
+        this.date = new Date(+date);
 
+        var lastTransaction = this.blockChain.lastTransaction;
+        if (lastTransaction) {
+            this.prevTransaction = <any>lastTransaction;
+            lastTransaction.nextTransaction = <any>this;
+        }
+        if (!this.check()) {
+            throw new Error('Transaction is incorrect');
+        }
     }
 
     public get isFirst() {
@@ -35,13 +48,8 @@ export class Transaction {
     }
 
     public toString(): string {
-        return [
-            this.hash,
-            this.amount.toString(),
-            this.from,
-            this.to,
-            this.date.valueOf()
-        ].join(Transaction.separator)
+        return [this.hash, this.serialize(this.data), this.date.valueOf().toString()].join(this.separator);
+        // OR return this.prepareData(<SerializedTransaction<T>>this);
     }
 
     private get prevHash() {
@@ -53,12 +61,10 @@ export class Transaction {
         let prevHash: string = this.prevHash;
         let strings = [
             prevHash,
-            this.amount.toString(),
-            this.from,
-            this.to,
-            this.date.toISOString()
+            this.data,
+            this.date.valueOf().toString()
         ];
-        return Hash.build(strings.join(Transaction.separator));
+        return Hash.build(strings.join(this.separator));
     }
 
     public check(): boolean {
