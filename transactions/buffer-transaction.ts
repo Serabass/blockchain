@@ -11,10 +11,10 @@ export class BufferTransaction extends Transaction<Buffer> {
     }
 
     public serializeDate(): string {
-        return this.date.toDateString().split("").reverse().join("");
+        return this.datetime.toDateString().split("").reverse().join("");
     }
 
     public deserializeDate(date: string): void {
-        this.date = new Date(date.split("").reverse().join(""));
+        this.datetime = new Date(date.split("").reverse().join(""));
     }
 }

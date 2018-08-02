@@ -8,26 +8,24 @@ export abstract class Transaction<T> {
     public nextTransaction: Transaction<T>;
     public hash: string;
     public data: T;
-    public date: Date;
+    public datetime: Date;
 
     constructor(public blockChain: BlockChain) {
 
     }
 
-    public get separator() {
-        return "|";
-    }
+    public abstract get separator();
 
     public abstract serialize(data: T): string;
 
     public abstract deserialize(input: string): T;
 
     public serializeDate(): string {
-        return this.date.valueOf().toString();
+        return (+this.datetime.valueOf()).toString();
     }
 
     public deserializeDate(date: string): void {
-        this.date = new Date(+date);
+        this.datetime = new Date(+date);
     }
 
     public parseBlock(block: string) {
@@ -42,7 +40,7 @@ export abstract class Transaction<T> {
             lastTransaction.nextTransaction = this as any;
         }
         if (!this.check()) {
-            throw new Error("Transaction is incorrect");
+            throw new Error("Transaction is incorrect: " + block);
         }
     }
 

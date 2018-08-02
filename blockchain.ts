@@ -32,7 +32,7 @@ export class BlockChain extends EventEmitter {
         });
     }
 
-    private transactions: StringTransaction[] = [];
+    public transactions: StringTransaction[] = [];
 
 /*
     public readStream(readable: stream.Readable): IterableIterator<Transaction> {
@@ -70,7 +70,7 @@ export class BlockChain extends EventEmitter {
     public add(data: string, date: Date = new Date()): BlockChain {
         let transaction = new StringTransaction(this);
         transaction.data = data;
-        transaction.date = date;
+        transaction.datetime = date;
         transaction.hash = transaction.buildHash();
         transaction.prevTransaction = this.lastTransaction;
         this.addTransaction(transaction);

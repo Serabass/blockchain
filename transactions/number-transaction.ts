@@ -20,7 +20,7 @@ export class NumberTransaction extends Transaction<number> {
     }
 
     public serializeDate(): string {
-        return this.date
+        return this.datetime
             .toDateString()
             .split("")
             .reverse()
@@ -34,6 +34,6 @@ export class NumberTransaction extends Transaction<number> {
             .reverse()
             .join("")
         ;
-        this.date = new Date(value);
+        this.datetime = new Date(value);
     }
 }
