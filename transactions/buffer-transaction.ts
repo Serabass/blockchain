@@ -2,11 +2,11 @@
 import {Transaction} from "../transaction";
 
 export class BufferTransaction extends Transaction<Buffer> {
-    public serialize(data: Buffer): string {
+    public serializeBlock(data: Buffer): string {
         return data.toString().split("").reverse().join("");
     }
 
-    public deserialize(input: string): Buffer {
+    public deserializeBlock(input: string): Buffer {
         return null;
     }
 

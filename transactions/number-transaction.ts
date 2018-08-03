@@ -1,7 +1,7 @@
 import {Transaction} from "../transaction";
 
 export class NumberTransaction extends Transaction<number> {
-    public serialize(data: number): string {
+    public serializeBlock(data: number): string {
         return data
             .toString()
             .split("")
@@ -10,7 +10,7 @@ export class NumberTransaction extends Transaction<number> {
             ;
     }
 
-    public deserialize(input: string): number {
+    public deserializeBlock(input: string): number {
         let value = input
             .split("")
             .reverse()

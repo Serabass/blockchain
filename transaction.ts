@@ -1,5 +1,6 @@
 import {BlockChain} from "./blockchain";
 import {Hash} from "./hash";
+import {StorageType} from "./storage-type";
 
 export abstract class Transaction<T> {
     public static defaultHash: string = Hash.build("");
@@ -10,15 +11,17 @@ export abstract class Transaction<T> {
     public data: T;
     public datetime: Date;
 
-    constructor(public blockChain: BlockChain) {
+    constructor(public blockChain: BlockChain<T>) {
 
     }
 
-    public abstract get separator();
+    public get separator() {
+        return "|";
+    }
 
-    public abstract serialize(data: T): string;
+    public abstract serializeBlock(data: T): StorageType;
 
-    public abstract deserialize(input: string): T;
+    public abstract deserializeBlock(input: StorageType): T;
 
     public serializeDate(): string {
         return (+this.datetime.valueOf()).toString();
@@ -28,10 +31,10 @@ export abstract class Transaction<T> {
         this.datetime = new Date(+date);
     }
 
-    public parseBlock(block: string) {
+    public parseBlock(block: StorageType) {
         let [hash, data, date] = block.split(this.separator);
         this.hash = hash;
-        this.data = this.deserialize(data);
+        this.data = this.deserializeBlock(data);
         this.deserializeDate(date);
 
         let lastTransaction = this.blockChain.lastTransaction;
@@ -45,13 +48,13 @@ export abstract class Transaction<T> {
     }
 
     public get isFirst() {
-        return !(this.prevTransaction instanceof Transaction);
+        return !(this.prevTransaction && this.prevTransaction instanceof Transaction);
     }
 
     public toString(): string {
         return [
             this.hash,
-            this.serialize(this.data),
+            this.serializeBlock(this.data),
             this.serializeDate(),
         ].join(this.separator);
         // OR return this.prepareData(<SerializedTransaction<T>>this);

@@ -5,11 +5,11 @@ export class StringTransaction extends Transaction<string> {
         return "|";
     }
 
-    public serialize(data: string): string {
+    public serializeBlock(data: string): string {
         return data.split("").reverse().join("");
     }
 
-    public deserialize(input: string): string {
+    public deserializeBlock(input: string): string {
         return input.split("").reverse().join("");
     }
 }

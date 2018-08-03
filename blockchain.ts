@@ -3,17 +3,18 @@ import {EventEmitter} from "events";
 import * as fs from "fs";
 import * as mfs from "mz/fs";
 import * as stream from "stream";
+import {Transaction} from "./transaction";
 import {StringTransaction} from "./transactions/string-transaction";
 
-export class BlockChain extends EventEmitter {
+export class BlockChain<T, TT extends Transaction<T> = Transaction<T>> extends EventEmitter {
     public static separator = "\n";
 
-    public static async fromFile(path: string): Promise<BlockChain> {
+    public static async fromFile(path: string): Promise<BlockChain<any>> {
         return BlockChain.fromStream(fs.createReadStream(path));
     }
 
-    public static fromStream(readable: stream.Readable): Promise<BlockChain> {
-        return new Promise<BlockChain>((resolve, reject) => {
+    public static fromStream(readable: stream.Readable): Promise<BlockChain<any>> {
+        return new Promise<BlockChain<any, any>>((resolve, reject) => {
             let blockChain = new BlockChain();
             let byLineStream = byline(readable);
             byLineStream
@@ -34,21 +35,7 @@ export class BlockChain extends EventEmitter {
 
     public transactions: StringTransaction[] = [];
 
-/*
-    public readStream(readable: stream.Readable): IterableIterator<Transaction> {
-        let byLineStream = byline(readable);
-        byLineStream
-            .on("data", (line: Buffer) => {
-                let source = line.toString("utf-8");
-                let transaction = new StringTransaction(this);
-                transaction.parseBlock(source);
-                this.addTransaction(transaction);
-                this.emit("newTransaction", transaction);
-            });
-    }
-*/
-
-    public addTransaction(transaction: StringTransaction): BlockChain {
+    public addTransaction(transaction: StringTransaction): BlockChain<T> {
         if (this.transactions.length >= 1) {
             transaction.prevTransaction = this.lastTransaction;
             transaction.hash = transaction.buildHash();
@@ -67,7 +54,7 @@ export class BlockChain extends EventEmitter {
         return this.transactions.length;
     }
 
-    public add(data: string, date: Date = new Date()): BlockChain {
+    public add(data: string, date: Date = new Date()): BlockChain<T> {
         let transaction = new StringTransaction(this);
         transaction.data = data;
         transaction.datetime = date;
