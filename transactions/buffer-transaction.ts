@@ -1,4 +1,3 @@
-
 import {Transaction} from "../transaction";
 
 export class BufferTransaction extends Transaction<Buffer> {

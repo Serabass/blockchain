@@ -2,7 +2,7 @@ import {BlockChain} from "./blockchain";
 import {Hash} from "./hash";
 import {StorageType} from "./storage-type";
 
-export abstract class Transaction<T> {
+export class Transaction<T> {
     public static defaultHash: string = Hash.build("");
 
     public prevTransaction: Transaction<T>;
@@ -19,9 +19,9 @@ export abstract class Transaction<T> {
         return "|";
     }
 
-    public abstract serializeBlock(data: T): StorageType;
+    public serializeBlock(data: T): StorageType | void {};
 
-    public abstract deserializeBlock(input: StorageType): T;
+    public deserializeBlock(input: StorageType): T | void {};
 
     public serializeDate(): string {
         return (+this.datetime.valueOf()).toString();
@@ -34,7 +34,7 @@ export abstract class Transaction<T> {
     public parseBlock(block: StorageType) {
         let [hash, data, date] = block.split(this.separator);
         this.hash = hash;
-        this.data = this.deserializeBlock(data);
+        this.data = this.deserializeBlock(data) as T;
         this.deserializeDate(date);
 
         let lastTransaction = this.blockChain.lastTransaction;

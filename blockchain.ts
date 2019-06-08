@@ -1,41 +1,15 @@
-import * as byline from "byline";
 import {EventEmitter} from "events";
-import * as fs from "fs";
 import * as mfs from "mz/fs";
-import * as stream from "stream";
 import {Transaction} from "./transaction";
-import {StringTransaction} from "./transactions/string-transaction";
 
-export class BlockChain<T, TT extends Transaction<T> = Transaction<T>> extends EventEmitter {
+export abstract class BlockChain<T> extends EventEmitter {
     public static separator = "\n";
 
-    public static async fromFile(path: string): Promise<BlockChain<any>> {
-        return BlockChain.fromStream(fs.createReadStream(path));
-    }
+    public transactions: Transaction<T>[] = [];
 
-    public static fromStream(readable: stream.Readable): Promise<BlockChain<any>> {
-        return new Promise<BlockChain<any, any>>((resolve, reject) => {
-            let blockChain = new BlockChain();
-            let byLineStream = byline(readable);
-            byLineStream
-                .on("data", (line: Buffer) => {
-                    let source = line.toString("utf-8");
-                    let transaction = new StringTransaction(blockChain);
-                    transaction.parseBlock(source);
-                    blockChain.addTransaction(transaction);
-                })
-                .on("error", (error) => {
-                    reject(error);
-                })
-                .on("end", () => {
-                    resolve(blockChain);
-                });
-        });
-    }
+    public abstract newTransaction(): Transaction<T>;
 
-    public transactions: StringTransaction[] = [];
-
-    public addTransaction(transaction: StringTransaction): BlockChain<T> {
+    public addTransaction(transaction: Transaction<T>): BlockChain<T> {
         if (this.transactions.length >= 1) {
             transaction.prevTransaction = this.lastTransaction;
             transaction.hash = transaction.buildHash();
@@ -55,8 +29,8 @@ export class BlockChain<T, TT extends Transaction<T> = Transaction<T>> extends E
     }
 
     public add(data: string, date: Date = new Date()): BlockChain<T> {
-        let transaction = new StringTransaction(this);
-        transaction.data = data;
+        let transaction = this.newTransaction();
+        transaction.data = data as unknown as T;
         transaction.datetime = date;
         transaction.hash = transaction.buildHash();
         transaction.prevTransaction = this.lastTransaction;
