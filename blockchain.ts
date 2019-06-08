@@ -1,8 +1,7 @@
-import {EventEmitter} from "events";
 import * as mfs from "mz/fs";
 import {Transaction} from "./transaction";
 
-export abstract class BlockChain<T> extends EventEmitter {
+export abstract class BlockChain<T> {
     public static separator = "\n";
 
     public transactions: Transaction<T>[] = [];

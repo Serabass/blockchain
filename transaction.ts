@@ -1,27 +1,36 @@
 import {BlockChain} from "./blockchain";
 import {Hash} from "./hash";
 import {StorageType} from "./storage-type";
+import {nonenumerable} from './decorators/nonenumerable';
 
 export class Transaction<T> {
     public static defaultHash: string = Hash.build("");
 
+    @nonenumerable
     public prevTransaction: Transaction<T>;
+
+    @nonenumerable
     public nextTransaction: Transaction<T>;
     public hash: string;
     public data: T;
     public datetime: Date;
 
-    constructor(public blockChain: BlockChain<T>) {
+    @nonenumerable
+    public blockChain: BlockChain<T>;
 
+    constructor(blockChain: BlockChain<T>) {
+        this.blockChain = blockChain;
     }
 
     public get separator() {
         return "|";
     }
 
-    public serializeBlock(data: T): StorageType | void {};
+    public serializeBlock(data: T): StorageType | void {
+    };
 
-    public deserializeBlock(input: StorageType): T | void {};
+    public deserializeBlock(input: StorageType): T | void {
+    };
 
     public serializeDate(): string {
         return (+this.datetime.valueOf()).toString();

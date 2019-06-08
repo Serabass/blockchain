@@ -24,8 +24,18 @@ export class StringBlockChain extends BlockChain<string> {
         });
     }
 
-    public static async fromFile(path: string): Promise<BlockChain<any>> {
+    public static async fromFile(path: string): Promise<StringBlockChain> {
         return this.fromStream(fs.createReadStream(path));
+    }
+
+    public static async fromString(str: string): Promise<StringBlockChain> {
+        let res = new StringBlockChain();
+        str.split(/[\r\n]+/).forEach((l) => {
+            let t = new StringTransaction(res);
+            t.parseBlock(l);
+            res.addTransaction(t);
+        });
+        return res;
     }
 
     public async save(path: string): Promise<void> {
