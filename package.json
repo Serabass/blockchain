@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "w": "jest --watch",
+    "s": "ts-node sandbox.ts",
     "start": "ts-node write.ts && ts-node read.ts"
   },
   "author": "",

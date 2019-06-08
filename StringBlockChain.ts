@@ -28,6 +28,18 @@ export class StringBlockChain extends BlockChain<string> {
         return this.fromStream(fs.createReadStream(path));
     }
 
+    public async save(path: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(path, 'utf-8', (err) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                resolve();
+            });
+        });
+    }
+
     newTransaction(): StringTransaction {
         return new StringTransaction(this);
     }
