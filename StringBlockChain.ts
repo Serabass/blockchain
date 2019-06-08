@@ -40,7 +40,7 @@ export class StringBlockChain extends BlockChain<string> {
 
     public async save(path: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            fs.writeFile(path, 'utf-8', (err) => {
+            fs.writeFile(path, this.toString(), (err) => {
                 if (err) {
                     return reject(err);
                 }
